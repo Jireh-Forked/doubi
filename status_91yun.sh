@@ -127,14 +127,14 @@ Download_Server_Status_client(){
 }
 Service_Server_Status_server(){
 	if [[ ${release} = "centos" ]]; then
-		if ! wget --no-check-certificate "https://raw.githubusercontent.com/lastle/doubi/master/service/server_status_server_centos" -O /etc/init.d/status-server; then
+		if ! wget --no-check-certificate "https://raw.githubusercontent.com/lastle/doubi/master/service/server_status_server_centos_91yun" -O /etc/init.d/status-server; then
 			echo -e "${Error} ServerStatus-91yun 服务端服务管理脚本下载失败 !" && exit 1
 		fi
 		chmod +x /etc/init.d/status-server
 		chkconfig --add status-server
 		chkconfig status-server on
 	else
-		if ! wget --no-check-certificate "https://raw.githubusercontent.com/lastle/doubi/master/service/server_status_server_debian" -O /etc/init.d/status-server; then
+		if ! wget --no-check-certificate "https://raw.githubusercontent.com/lastle/doubi/master/service/server_status_server_debian_91yun" -O /etc/init.d/status-server; then
 			echo -e "${Error} ServerStatus-91yun 服务端服务管理脚本下载失败 !" && exit 1
 		fi
 		chmod +x /etc/init.d/status-server
@@ -144,14 +144,14 @@ Service_Server_Status_server(){
 }
 Service_Server_Status_client(){
 	if [[ ${release} = "centos" ]]; then
-		if ! wget --no-check-certificate "https://raw.githubusercontent.com/lastle/doubi/master/service/server_status_client_centos" -O /etc/init.d/client-psutil; then
+		if ! wget --no-check-certificate "https://raw.githubusercontent.com/lastle/doubi/master/service/server_status_client_centos_91yun" -O /etc/init.d/client-psutil; then
 			echo -e "${Error} ServerStatus-91yun 客户端服务管理脚本下载失败 !" && exit 1
 		fi
 		chmod +x /etc/init.d/client-psutil
 		chkconfig --add client-psutil
 		chkconfig client-psutil on
 	else
-		if ! wget --no-check-certificate "https://raw.githubusercontent.com/lastle/doubi/master/service/server_status_client_debian" -O /etc/init.d/client-psutil; then
+		if ! wget --no-check-certificate "https://raw.githubusercontent.com/lastle/doubi/master/service/server_status_client_debian_91yun" -O /etc/init.d/client-psutil; then
 			echo -e "${Error} ServerStatus-91yun 客户端服务管理脚本下载失败 !" && exit 1
 		fi
 		chmod +x /etc/init.d/client-psutil
