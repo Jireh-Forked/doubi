@@ -13,14 +13,14 @@ export PATH
 sh_ver="1.0.0"
 filepath=$(cd "$(dirname "$0")"; pwd)
 file_1=$(echo -e "${filepath}"|awk -F "$0" '{print $1}')
-file="/usr/local/ServerStatus"
-web_file="/usr/local/ServerStatus/web"
-server_file="/usr/local/ServerStatus/server"
-server_conf="/usr/local/ServerStatus/server/config.json"
-server_conf_1="/usr/local/ServerStatus/server/config.conf"
-client_file="/usr/local/ServerStatus/client"
-client_log_file="/tmp/serverstatus_client.log"
-server_log_file="/tmp/serverstatus_server.log"
+file="/usr/local/ServerStatus-91yun"
+web_file="/usr/local/ServerStatus-91yun/web"
+server_file="/usr/local/ServerStatus-91yun/server"
+server_conf="/usr/local/ServerStatus-91yun/server/config.json"
+server_conf_1="/usr/local/ServerStatus-91yun/server/config.conf"
+client_file="/usr/local/ServerStatus-91yun/client"
+client_log_file="/tmp/ServerStatus-91yun_client.log"
+server_log_file="/tmp/ServerStatus-91yun_server.log"
 jq_file="${file}/jq"
 
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
@@ -48,12 +48,12 @@ check_sys(){
 	bit=`uname -m`
 }
 check_installed_server_status(){
-	[[ ! -e "${server_file}/sergate" ]] && echo -e "${Error} ServerStatus 服务端没有安装，请检查 !" && exit 1
+	[[ ! -e "${server_file}/sergate" ]] && echo -e "${Error} ServerStatus-91yun 服务端没有安装，请检查 !" && exit 1
 }
 check_installed_client_status(){
 	if [[ ! -e "${client_file}/status-client.py" ]]; then
 		if [[ ! -e "${file}/status-client.py" ]]; then
-			echo -e "${Error} ServerStatus 客户端没有安装，请检查 !" && exit 1
+			echo -e "${Error} ServerStatus-91yun 客户端没有安装，请检查 !" && exit 1
 		fi
 	fi
 }
@@ -66,13 +66,13 @@ check_pid_client(){
 Download_Server_Status_server(){
 	cd "/tmp"
 	wget -N --no-check-certificate "https://github.com/lastle/ServerStatus/archive/master.zip"
-	[[ ! -e "master.zip" ]] && echo -e "${Error} ServerStatus 服务端下载失败 !" && exit 1
+	[[ ! -e "master.zip" ]] && echo -e "${Error} ServerStatus-91yun 服务端下载失败 !" && exit 1
 	unzip master.zip
 	rm -rf master.zip
-	[[ ! -e "/tmp/ServerStatus-master" ]] && echo -e "${Error} ServerStatus 服务端解压失败 !" && exit 1
+	[[ ! -e "/tmp/ServerStatus-master" ]] && echo -e "${Error} ServerStatus-91yun 服务端解压失败 !" && exit 1
 	cd "/tmp/ServerStatus-master/server"
 	make
-	[[ ! -e "sergate" ]] && echo -e "${Error} ServerStatus 服务端编译失败 !" && cd "${file_1}" && rm -rf "/tmp/ServerStatus-master" && exit 1
+	[[ ! -e "sergate" ]] && echo -e "${Error} ServerStatus-91yun 服务端编译失败 !" && cd "${file_1}" && rm -rf "/tmp/ServerStatus-master" && exit 1
 	cd "${file_1}"
 	[[ ! -e "${file}" ]] && mkdir "${file}"
 	if [[ ! -e "${server_file}" ]]; then
@@ -89,7 +89,7 @@ Download_Server_Status_server(){
 		fi
 	fi
 	if [[ ! -e "${server_file}/sergate" ]]; then
-		echo -e "${Error} ServerStatus 服务端移动重命名失败 !"
+		echo -e "${Error} ServerStatus-91yun 服务端移动重命名失败 !"
 		[[ -e "${server_file}/sergate1" ]] && mv "${server_file}/sergate1" "${server_file}/sergate"
 		rm -rf "/tmp/ServerStatus-master"
 		exit 1
@@ -101,7 +101,7 @@ Download_Server_Status_server(){
 Download_Server_Status_client(){
 	cd "/tmp"
 	wget -N --no-check-certificate "https://raw.githubusercontent.com/lastle/ServerStatus/master/clients/client-psutil.py"
-	[[ ! -e "client-psutil.py" ]] && echo -e "${Error} ServerStatus 客户端下载失败 !" && exit 1
+	[[ ! -e "client-psutil.py" ]] && echo -e "${Error} ServerStatus-91yun 客户端下载失败 !" && exit 1
 	cd "${file_1}"
 	[[ ! -e "${file}" ]] && mkdir "${file}"
 	if [[ ! -e "${client_file}" ]]; then
@@ -116,7 +116,7 @@ Download_Server_Status_client(){
 		fi
 	fi
 	if [[ ! -e "${client_file}/client-psutil.py" ]]; then
-		echo -e "${Error} ServerStatus 客户端移动失败 !"
+		echo -e "${Error} ServerStatus-91yun 客户端移动失败 !"
 		[[ -e "${client_file}/client-psutil1.py" ]] && mv "${client_file}/client-psutil1.py" "${client_file}/client-psutil.py"
 		rm -rf "/tmp/client-psutil.py"
 		exit 1
@@ -128,36 +128,36 @@ Download_Server_Status_client(){
 Service_Server_Status_server(){
 	if [[ ${release} = "centos" ]]; then
 		if ! wget --no-check-certificate "https://raw.githubusercontent.com/lastle/doubi/master/service/server_status_server_centos" -O /etc/init.d/status-server; then
-			echo -e "${Error} ServerStatus 服务端服务管理脚本下载失败 !" && exit 1
+			echo -e "${Error} ServerStatus-91yun 服务端服务管理脚本下载失败 !" && exit 1
 		fi
 		chmod +x /etc/init.d/status-server
 		chkconfig --add status-server
 		chkconfig status-server on
 	else
 		if ! wget --no-check-certificate "https://raw.githubusercontent.com/lastle/doubi/master/service/server_status_server_debian" -O /etc/init.d/status-server; then
-			echo -e "${Error} ServerStatus 服务端服务管理脚本下载失败 !" && exit 1
+			echo -e "${Error} ServerStatus-91yun 服务端服务管理脚本下载失败 !" && exit 1
 		fi
 		chmod +x /etc/init.d/status-server
 		update-rc.d -f status-server defaults
 	fi
-	echo -e "${Info} ServerStatus 服务端服务管理脚本下载完成 !"
+	echo -e "${Info} ServerStatus-91yun 服务端服务管理脚本下载完成 !"
 }
 Service_Server_Status_client(){
 	if [[ ${release} = "centos" ]]; then
 		if ! wget --no-check-certificate "https://raw.githubusercontent.com/lastle/doubi/master/service/server_status_client_centos" -O /etc/init.d/status-client; then
-			echo -e "${Error} ServerStatus 客户端服务管理脚本下载失败 !" && exit 1
+			echo -e "${Error} ServerStatus-91yun 客户端服务管理脚本下载失败 !" && exit 1
 		fi
 		chmod +x /etc/init.d/status-client
 		chkconfig --add status-client
 		chkconfig status-client on
 	else
 		if ! wget --no-check-certificate "https://raw.githubusercontent.com/lastle/doubi/master/service/server_status_client_debian" -O /etc/init.d/status-client; then
-			echo -e "${Error} ServerStatus 客户端服务管理脚本下载失败 !" && exit 1
+			echo -e "${Error} ServerStatus-91yun 客户端服务管理脚本下载失败 !" && exit 1
 		fi
 		chmod +x /etc/init.d/status-client
 		update-rc.d -f status-client defaults
 	fi
-	echo -e "${Info} ServerStatus 客户端服务管理脚本下载完成 !"
+	echo -e "${Info} ServerStatus-91yun 客户端服务管理脚本下载完成 !"
 }
 Installation_dependency(){
 	mode=$1
@@ -221,7 +221,7 @@ EOF
 Read_config_client(){
 	if [[ ! -e "${client_file}/status-client.py" ]]; then
 		if [[ ! -e "${file}/status-client.py" ]]; then
-			echo -e "${Error} ServerStatus 客户端文件不存在 !" && exit 1
+			echo -e "${Error} ServerStatus-91yun 客户端文件不存在 !" && exit 1
 		else
 			client_text="$(cat "${file}/status-client.py"|sed 's/\"//g;s/,//g;s/ //g')"
 			rm -rf "${file}/status-client.py"
@@ -247,12 +247,12 @@ Set_server(){
 	mode=$1
 	[[ -z ${mode} ]] && mode="server"
 	if [[ ${mode} == "server" ]]; then
-		echo -e "请输入 ServerStatus 服务端中网站要设置的 域名[server]
+		echo -e "请输入 ServerStatus-91yun 服务端中网站要设置的 域名[server]
 默认为本机IP为域名，例如输入: toyoo.pw ，如果要使用本机IP，请留空直接回车"
 		read -e -p "(默认: 本机IP):" server_s
 		[[ -z "$server_s" ]] && server_s=""
 	else
-		echo -e "请输入 ServerStatus 服务端的 IP/域名[server]"
+		echo -e "请输入 ServerStatus-91yun 服务端的 IP/域名[server]"
 		read -e -p "(默认: 127.0.0.1):" server_s
 		[[ -z "$server_s" ]] && server_s="127.0.0.1"
 	fi
@@ -264,7 +264,7 @@ Set_server(){
 Set_server_http_port(){
 	while true
 		do
-		echo -e "请输入 ServerStatus 服务端中网站要设置的 域名/IP的端口[1-65535]（如果是域名的话，一般用 80 端口）"
+		echo -e "请输入 ServerStatus-91yun 服务端中网站要设置的 域名/IP的端口[1-65535]（如果是域名的话，一般用 80 端口）"
 		read -e -p "(默认: 8888):" server_http_port_s
 		[[ -z "$server_http_port_s" ]] && server_http_port_s="8888"
 		echo $((${server_http_port_s}+0)) &>/dev/null
@@ -285,7 +285,7 @@ Set_server_http_port(){
 Set_server_port(){
 	while true
 		do
-		echo -e "请输入 ServerStatus 服务端监听的端口[1-65535]（用于服务端接收客户端消息的端口，客户端要填写这个端口）"
+		echo -e "请输入 ServerStatus-91yun 服务端监听的端口[1-65535]（用于服务端接收客户端消息的端口，客户端要填写这个端口）"
 		read -e -p "(默认: 35601):" server_port_s
 		[[ -z "$server_port_s" ]] && server_port_s="35601"
 		echo $((${server_port_s}+0)) &>/dev/null
@@ -307,9 +307,9 @@ Set_username(){
 	mode=$1
 	[[ -z ${mode} ]] && mode="server"
 	if [[ ${mode} == "server" ]]; then
-		echo -e "请输入 ServerStatus 服务端要设置的用户名[username]（字母/数字，不可与其他账号重复）"
+		echo -e "请输入 ServerStatus-91yun 服务端要设置的用户名[username]（字母/数字，不可与其他账号重复）"
 	else
-		echo -e "请输入 ServerStatus 服务端中对应配置的用户名[username]（字母/数字，不可与其他账号重复）"
+		echo -e "请输入 ServerStatus-91yun 服务端中对应配置的用户名[username]（字母/数字，不可与其他账号重复）"
 	fi
 	read -e -p "(默认: 取消):" username_s
 	[[ -z "$username_s" ]] && echo "已取消..." && exit 0
@@ -321,9 +321,9 @@ Set_password(){
 	mode=$1
 	[[ -z ${mode} ]] && mode="server"
 	if [[ ${mode} == "server" ]]; then
-		echo -e "请输入 ServerStatus 服务端要设置的密码[password]（字母/数字，可重复）"
+		echo -e "请输入 ServerStatus-91yun 服务端要设置的密码[password]（字母/数字，可重复）"
 	else
-		echo -e "请输入 ServerStatus 服务端中对应配置的密码[password]（字母/数字）"
+		echo -e "请输入 ServerStatus-91yun 服务端中对应配置的密码[password]（字母/数字）"
 	fi
 	read -e -p "(默认: doub.io):" password_s
 	[[ -z "$password_s" ]] && password_s="doub.io"
@@ -332,7 +332,7 @@ Set_password(){
 	echo "	================================================" && echo
 }
 Set_name(){
-	echo -e "请输入 ServerStatus 服务端要设置的节点名称[name]（支持中文，前提是你的系统和SSH工具支持中文输入，仅仅是个名字）"
+	echo -e "请输入 ServerStatus-91yun 服务端要设置的节点名称[name]（支持中文，前提是你的系统和SSH工具支持中文输入，仅仅是个名字）"
 	read -e -p "(默认: Server 01):" name_s
 	[[ -z "$name_s" ]] && name_s="Server 01"
 	echo && echo "	================================================"
@@ -340,7 +340,7 @@ Set_name(){
 	echo "	================================================" && echo
 }
 Set_type(){
-	echo -e "请输入 ServerStatus 服务端要设置的节点虚拟化类型[type]（例如 OpenVZ / KVM）"
+	echo -e "请输入 ServerStatus-91yun 服务端要设置的节点虚拟化类型[type]（例如 OpenVZ / KVM）"
 	read -e -p "(默认: KVM):" type_s
 	[[ -z "$type_s" ]] && type_s="KVM"
 	echo && echo "	================================================"
@@ -348,7 +348,7 @@ Set_type(){
 	echo "	================================================" && echo
 }
 Set_location(){
-	echo -e "请输入 ServerStatus 服务端要设置的节点位置[location]（支持中文，前提是你的系统和SSH工具支持中文输入）"
+	echo -e "请输入 ServerStatus-91yun 服务端要设置的节点位置[location]（支持中文，前提是你的系统和SSH工具支持中文输入）"
 	read -e -p "(默认: Hong Kong):" location_s
 	[[ -z "$location_s" ]] && location_s="Hong Kong"
 	echo && echo "	================================================"
@@ -664,7 +664,7 @@ http://${server_s}:${server_http_port_s} {
 EOF
 			/etc/init.d/caddy restart
 		else
-			echo -e "${Info} 发现 Caddy 配置文件非空，开始追加 ServerStatus 网站配置内容到文件最后..."
+			echo -e "${Info} 发现 Caddy 配置文件非空，开始追加 ServerStatus-91yun 网站配置内容到文件最后..."
 			cat >> "/usr/local/caddy/Caddyfile"<<-EOF
 http://${server_s}:${server_http_port_s} {
  root ${web_file}
@@ -679,7 +679,7 @@ EOF
 	fi
 }
 Install_ServerStatus_server(){
-	[[ -e "${server_file}/sergate" ]] && echo -e "${Error} 检测到 ServerStatus 服务端已安装 !" && exit 1
+	[[ -e "${server_file}/sergate" ]] && echo -e "${Error} 检测到 ServerStatus-91yun 服务端已安装 !" && exit 1
 	Set_server_port
 	echo -e "${Info} 开始安装/配置 依赖..."
 	Installation_dependency "server"
@@ -703,7 +703,7 @@ Install_ServerStatus_server(){
 	Start_ServerStatus_server
 }
 Install_ServerStatus_client(){
-	[[ -e "${client_file}/status-client.py" ]] && echo -e "${Error} 检测到 ServerStatus 客户端已安装 !" && exit 1
+	[[ -e "${client_file}/status-client.py" ]] && echo -e "${Error} 检测到 ServerStatus-91yun 客户端已安装 !" && exit 1
 	check_sys
 	if [[ ${release} == "centos" ]]; then
 		cat /etc/redhat-release |grep 7\..*|grep -i centos>/dev/null
@@ -752,7 +752,7 @@ Update_ServerStatus_client(){
 	[[ ! -z ${PID} ]] && /etc/init.d/status-client stop
 	if [[ ! -e "${client_file}/status-client.py" ]]; then
 		if [[ ! -e "${file}/status-client.py" ]]; then
-			echo -e "${Error} ServerStatus 客户端文件不存在 !" && exit 1
+			echo -e "${Error} ServerStatus-91yun 客户端文件不存在 !" && exit 1
 		else
 			client_text="$(cat "${file}/status-client.py"|sed 's/\"//g;s/,//g;s/ //g')"
 			rm -rf "${file}/status-client.py"
@@ -774,13 +774,13 @@ Update_ServerStatus_client(){
 Start_ServerStatus_server(){
 	check_installed_server_status
 	check_pid_server
-	[[ ! -z ${PID} ]] && echo -e "${Error} ServerStatus 正在运行，请检查 !" && exit 1
+	[[ ! -z ${PID} ]] && echo -e "${Error} ServerStatus-91yun 正在运行，请检查 !" && exit 1
 	/etc/init.d/status-server start
 }
 Stop_ServerStatus_server(){
 	check_installed_server_status
 	check_pid_server
-	[[ -z ${PID} ]] && echo -e "${Error} ServerStatus 没有运行，请检查 !" && exit 1
+	[[ -z ${PID} ]] && echo -e "${Error} ServerStatus-91yun 没有运行，请检查 !" && exit 1
 	/etc/init.d/status-server stop
 }
 Restart_ServerStatus_server(){
@@ -791,7 +791,7 @@ Restart_ServerStatus_server(){
 }
 Uninstall_ServerStatus_server(){
 	check_installed_server_status
-	echo "确定要卸载 ServerStatus 服务端(如果同时安装了客户端，则只会删除服务端) ? [y/N]"
+	echo "确定要卸载 ServerStatus-91yun 服务端(如果同时安装了客户端，则只会删除服务端) ? [y/N]"
 	echo
 	read -e -p "(默认: n):" unyn
 	[[ -z ${unyn} ]] && unyn="n"
@@ -820,7 +820,7 @@ Uninstall_ServerStatus_server(){
 		else
 			update-rc.d -f status-server remove
 		fi
-		echo && echo "ServerStatus 卸载完成 !" && echo
+		echo && echo "ServerStatus-91yun 卸载完成 !" && echo
 	else
 		echo && echo "卸载已取消..." && echo
 	fi
@@ -828,13 +828,13 @@ Uninstall_ServerStatus_server(){
 Start_ServerStatus_client(){
 	check_installed_client_status
 	check_pid_client
-	[[ ! -z ${PID} ]] && echo -e "${Error} ServerStatus 正在运行，请检查 !" && exit 1
+	[[ ! -z ${PID} ]] && echo -e "${Error} ServerStatus-91yun 正在运行，请检查 !" && exit 1
 	/etc/init.d/status-client start
 }
 Stop_ServerStatus_client(){
 	check_installed_client_status
 	check_pid_client
-	[[ -z ${PID} ]] && echo -e "${Error} ServerStatus 没有运行，请检查 !" && exit 1
+	[[ -z ${PID} ]] && echo -e "${Error} ServerStatus-91yun 没有运行，请检查 !" && exit 1
 	/etc/init.d/status-client stop
 }
 Restart_ServerStatus_client(){
@@ -845,7 +845,7 @@ Restart_ServerStatus_client(){
 }
 Uninstall_ServerStatus_client(){
 	check_installed_client_status
-	echo "确定要卸载 ServerStatus 客户端(如果同时安装了服务端，则只会删除客户端) ? [y/N]"
+	echo "确定要卸载 ServerStatus-91yun 客户端(如果同时安装了服务端，则只会删除客户端) ? [y/N]"
 	echo
 	read -e -p "(默认: n):" unyn
 	[[ -z ${unyn} ]] && unyn="n"
@@ -866,7 +866,7 @@ Uninstall_ServerStatus_client(){
 		else
 			update-rc.d -f status-client remove
 		fi
-		echo && echo "ServerStatus 卸载完成 !" && echo
+		echo && echo "ServerStatus-91yun 卸载完成 !" && echo
 	else
 		echo && echo "卸载已取消..." && echo
 	fi
@@ -875,7 +875,7 @@ View_ServerStatus_client(){
 	check_installed_client_status
 	Read_config_client
 	clear && echo "————————————————————" && echo
-	echo -e "  ServerStatus 客户端配置信息：
+	echo -e "  ServerStatus-91yun 客户端配置信息：
  
   IP \t: ${Green_font_prefix}${client_server}${Font_color_suffix}
   端口 \t: ${Green_font_prefix}${client_port}${Font_color_suffix}
@@ -946,7 +946,7 @@ Update_Shell(){
 	echo -e "脚本已更新为最新版本[ ${sh_new_ver} ] !(注意：因为更新方式为直接覆盖当前运行的脚本，所以可能下面会提示一些报错，无视即可)" && exit 0
 }
 menu_client(){
-echo && echo -e "  ServerStatus 一键安装管理脚本 ${Red_font_prefix}[v${sh_ver}]${Font_color_suffix}
+echo && echo -e "  ServerStatus-91yun 一键安装管理脚本 ${Red_font_prefix}[v${sh_ver}]${Font_color_suffix}
   -- Toyo | doub.io/shell-jc3 --
   
  ${Green_font_prefix} 0.${Font_color_suffix} 升级脚本
@@ -1025,7 +1025,7 @@ case "$num" in
 esac
 }
 menu_server(){
-echo && echo -e "  ServerStatus 一键安装管理脚本 ${Red_font_prefix}[v${sh_ver}]${Font_color_suffix}
+echo && echo -e "  ServerStatus-91yun 一键安装管理脚本 ${Red_font_prefix}[v${sh_ver}]${Font_color_suffix}
   -- Toyo | doub.io/shell-jc3 --
   
  ${Green_font_prefix} 0.${Font_color_suffix} 升级脚本
