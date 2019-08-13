@@ -5,12 +5,12 @@ export PATH
 #=================================================
 #	System Required: CentOS/Debian/Ubuntu
 #	Description: ServerStatus client + server
-#	Version: 1.0.0
+#	Version: 1.0.1
 #	Author: Jireh
-#	Blog:
+#	Blog: www.lyile.cn
 #=================================================
 
-sh_ver="1.0.0"
+sh_ver="1.0.1"
 filepath=$(cd "$(dirname "$0")"; pwd)
 file_1=$(echo -e "${filepath}"|awk -F "$0" '{print $1}')
 file="/usr/local/ServerStatus-91yun"
@@ -51,8 +51,8 @@ check_installed_server_status(){
 	[[ ! -e "${server_file}/sergate" ]] && echo -e "${Error} ServerStatus-91yun 服务端没有安装，请检查 !" && exit 1
 }
 check_installed_client_status(){
-	if [[ ! -e "${client_file}/status-client.py" ]]; then
-		if [[ ! -e "${file}/status-client.py" ]]; then
+	if [[ ! -e "${client_file}/client-psutil.py" ]]; then
+		if [[ ! -e "${file}/client-psutil.py" ]]; then
 			echo -e "${Error} ServerStatus-91yun 客户端没有安装，请检查 !" && exit 1
 		fi
 	fi
@@ -61,7 +61,7 @@ check_pid_server(){
 	PID=`ps -ef| grep "sergate"| grep -v grep| grep -v ".sh"| grep -v "init.d"| grep -v "service"| awk '{print $2}'`
 }
 check_pid_client(){
-	PID=`ps -ef| grep "status-client.py"| grep -v grep| grep -v ".sh"| grep -v "init.d"| grep -v "service"| awk '{print $2}'`
+	PID=`ps -ef| grep "client-psutil.py"| grep -v grep| grep -v ".sh"| grep -v "init.d"| grep -v "service"| awk '{print $2}'`
 }
 Download_Server_Status_server(){
 	cd "/tmp"
@@ -144,18 +144,18 @@ Service_Server_Status_server(){
 }
 Service_Server_Status_client(){
 	if [[ ${release} = "centos" ]]; then
-		if ! wget --no-check-certificate "https://raw.githubusercontent.com/lastle/doubi/master/service/server_status_client_centos" -O /etc/init.d/status-client; then
+		if ! wget --no-check-certificate "https://raw.githubusercontent.com/lastle/doubi/master/service/server_status_client_centos" -O /etc/init.d/client-psutil; then
 			echo -e "${Error} ServerStatus-91yun 客户端服务管理脚本下载失败 !" && exit 1
 		fi
-		chmod +x /etc/init.d/status-client
-		chkconfig --add status-client
-		chkconfig status-client on
+		chmod +x /etc/init.d/client-psutil
+		chkconfig --add client-psutil
+		chkconfig client-psutil on
 	else
-		if ! wget --no-check-certificate "https://raw.githubusercontent.com/lastle/doubi/master/service/server_status_client_debian" -O /etc/init.d/status-client; then
+		if ! wget --no-check-certificate "https://raw.githubusercontent.com/lastle/doubi/master/service/server_status_client_debian" -O /etc/init.d/client-psutil; then
 			echo -e "${Error} ServerStatus-91yun 客户端服务管理脚本下载失败 !" && exit 1
 		fi
-		chmod +x /etc/init.d/status-client
-		update-rc.d -f status-client defaults
+		chmod +x /etc/init.d/client-psutil
+		update-rc.d -f client-psutil defaults
 	fi
 	echo -e "${Info} ServerStatus-91yun 客户端服务管理脚本下载完成 !"
 }
@@ -219,15 +219,15 @@ PORT = ${server_port_s}
 EOF
 }
 Read_config_client(){
-	if [[ ! -e "${client_file}/status-client.py" ]]; then
-		if [[ ! -e "${file}/status-client.py" ]]; then
+	if [[ ! -e "${client_file}/client-psutil.py" ]]; then
+		if [[ ! -e "${file}/client-psutil.py" ]]; then
 			echo -e "${Error} ServerStatus-91yun 客户端文件不存在 !" && exit 1
 		else
-			client_text="$(cat "${file}/status-client.py"|sed 's/\"//g;s/,//g;s/ //g')"
-			rm -rf "${file}/status-client.py"
+			client_text="$(cat "${file}/client-psutil.py"|sed 's/\"//g;s/,//g;s/ //g')"
+			rm -rf "${file}/client-psutil.py"
 		fi
 	else
-		client_text="$(cat "${client_file}/status-client.py"|sed 's/\"//g;s/,//g;s/ //g')"
+		client_text="$(cat "${client_file}/client-psutil.py"|sed 's/\"//g;s/,//g;s/ //g')"
 	fi
 	client_server="$(echo -e "${client_text}"|grep "SERVER="|awk -F "=" '{print $2}')"
 	client_port="$(echo -e "${client_text}"|grep "PORT="|awk -F "=" '{print $2}')"
@@ -618,10 +618,10 @@ Set_ServerStatus_client(){
 	Restart_ServerStatus_client
 }
 Modify_config_client(){
-	sed -i 's/SERVER = "'"${client_server}"'"/SERVER = "'"${server_s}"'"/g' "${client_file}/status-client.py"
-	sed -i "s/PORT = ${client_port}/PORT = ${server_port_s}/g" "${client_file}/status-client.py"
-	sed -i 's/USER = "'"${client_user}"'"/USER = "'"${username_s}"'"/g' "${client_file}/status-client.py"
-	sed -i 's/PASSWORD = "'"${client_password}"'"/PASSWORD = "'"${password_s}"'"/g' "${client_file}/status-client.py"
+	sed -i 's/SERVER = "'"${client_server}"'"/SERVER = "'"${server_s}"'"/g' "${client_file}/client-psutil.py"
+	sed -i "s/PORT = ${client_port}/PORT = ${server_port_s}/g" "${client_file}/client-psutil.py"
+	sed -i 's/USER = "'"${client_user}"'"/USER = "'"${username_s}"'"/g' "${client_file}/client-psutil.py"
+	sed -i 's/PASSWORD = "'"${client_password}"'"/PASSWORD = "'"${password_s}"'"/g' "${client_file}/client-psutil.py"
 }
 Install_jq(){
 	if [[ ! -e ${jq_file} ]]; then
@@ -703,7 +703,7 @@ Install_ServerStatus_server(){
 	Start_ServerStatus_server
 }
 Install_ServerStatus_client(){
-	[[ -e "${client_file}/status-client.py" ]] && echo -e "${Error} 检测到 ServerStatus-91yun 客户端已安装 !" && exit 1
+	[[ -e "${client_file}/client-psutil.py" ]] && echo -e "${Error} 检测到 ServerStatus-91yun 客户端已安装 !" && exit 1
 	check_sys
 	if [[ ${release} == "centos" ]]; then
 		cat /etc/redhat-release |grep 7\..*|grep -i centos>/dev/null
@@ -749,16 +749,16 @@ Update_ServerStatus_server(){
 Update_ServerStatus_client(){
 	check_installed_client_status
 	check_pid_client
-	[[ ! -z ${PID} ]] && /etc/init.d/status-client stop
-	if [[ ! -e "${client_file}/status-client.py" ]]; then
-		if [[ ! -e "${file}/status-client.py" ]]; then
+	[[ ! -z ${PID} ]] && /etc/init.d/client-psutil stop
+	if [[ ! -e "${client_file}/client-psutil.py" ]]; then
+		if [[ ! -e "${file}/client-psutil.py" ]]; then
 			echo -e "${Error} ServerStatus-91yun 客户端文件不存在 !" && exit 1
 		else
-			client_text="$(cat "${file}/status-client.py"|sed 's/\"//g;s/,//g;s/ //g')"
-			rm -rf "${file}/status-client.py"
+			client_text="$(cat "${file}/client-psutil.py"|sed 's/\"//g;s/,//g;s/ //g')"
+			rm -rf "${file}/client-psutil.py"
 		fi
 	else
-		client_text="$(cat "${client_file}/status-client.py"|sed 's/\"//g;s/,//g;s/ //g')"
+		client_text="$(cat "${client_file}/client-psutil.py"|sed 's/\"//g;s/,//g;s/ //g')"
 	fi
 	server_s="$(echo -e "${client_text}"|grep "SERVER="|awk -F "=" '{print $2}')"
 	server_port_s="$(echo -e "${client_text}"|grep "PORT="|awk -F "=" '{print $2}')"
@@ -767,7 +767,7 @@ Update_ServerStatus_client(){
 	Download_Server_Status_client
 	Read_config_client
 	Modify_config_client
-	rm -rf /etc/init.d/status-client
+	rm -rf /etc/init.d/client-psutil
 	Service_Server_Status_client
 	Start_ServerStatus_client
 }
@@ -801,7 +801,7 @@ Uninstall_ServerStatus_server(){
 		Read_config_server
 		Del_iptables "${server_port}"
 		Save_iptables
-		if [[ -e "${client_file}/status-client.py" ]]; then
+		if [[ -e "${client_file}/client-psutil.py" ]]; then
 			rm -rf "${server_file}"
 			rm -rf "${web_file}"
 		else
@@ -829,19 +829,19 @@ Start_ServerStatus_client(){
 	check_installed_client_status
 	check_pid_client
 	[[ ! -z ${PID} ]] && echo -e "${Error} ServerStatus-91yun 正在运行，请检查 !" && exit 1
-	/etc/init.d/status-client start
+	/etc/init.d/client-psutil start
 }
 Stop_ServerStatus_client(){
 	check_installed_client_status
 	check_pid_client
 	[[ -z ${PID} ]] && echo -e "${Error} ServerStatus-91yun 没有运行，请检查 !" && exit 1
-	/etc/init.d/status-client stop
+	/etc/init.d/client-psutil stop
 }
 Restart_ServerStatus_client(){
 	check_installed_client_status
 	check_pid_client
-	[[ ! -z ${PID} ]] && /etc/init.d/status-client stop
-	/etc/init.d/status-client start
+	[[ ! -z ${PID} ]] && /etc/init.d/client-psutil stop
+	/etc/init.d/client-psutil start
 }
 Uninstall_ServerStatus_client(){
 	check_installed_client_status
@@ -860,11 +860,11 @@ Uninstall_ServerStatus_client(){
 		else
 			rm -rf "${file}"
 		fi
-		rm -rf /etc/init.d/status-client
+		rm -rf /etc/init.d/client-psutil
 		if [[ ${release} = "centos" ]]; then
-			chkconfig --del status-client
+			chkconfig --del client-psutil
 		else
-			update-rc.d -f status-client remove
+			update-rc.d -f client-psutil remove
 		fi
 		echo && echo "ServerStatus-91yun 卸载完成 !" && echo
 	else
@@ -934,8 +934,8 @@ Set_iptables(){
 Update_Shell(){
 	sh_new_ver=$(wget --no-check-certificate -qO- -t1 -T3 "https://raw.githubusercontent.com/lastle/doubi/master/status_91yun.sh"|grep 'sh_ver="'|awk -F "=" '{print $NF}'|sed 's/\"//g'|head -1) && sh_new_type="github"
 	[[ -z ${sh_new_ver} ]] && echo -e "${Error} 无法链接到 Github !" && exit 0
-	if [[ -e "/etc/init.d/status-client" ]]; then
-		rm -rf /etc/init.d/status-client
+	if [[ -e "/etc/init.d/client-psutil" ]]; then
+		rm -rf /etc/init.d/client-psutil
 		Service_Server_Status_client
 	fi
 	if [[ -e "/etc/init.d/status-server" ]]; then
@@ -964,7 +964,7 @@ echo && echo -e "  ServerStatus-91yun 一键安装管理脚本 ${Red_font_prefix
  ${Green_font_prefix} 9.${Font_color_suffix} 查看 客户端日志
 ————————————
  ${Green_font_prefix}10.${Font_color_suffix} 切换为 服务端菜单" && echo
-if [[ -e "${client_file}/status-client.py" ]]; then
+if [[ -e "${client_file}/client-psutil.py" ]]; then
 	check_pid_client
 	if [[ ! -z "${PID}" ]]; then
 		echo -e " 当前状态: 客户端 ${Green_font_prefix}已安装${Font_color_suffix} 并 ${Green_font_prefix}已启动${Font_color_suffix}"
@@ -972,7 +972,7 @@ if [[ -e "${client_file}/status-client.py" ]]; then
 		echo -e " 当前状态: 客户端 ${Green_font_prefix}已安装${Font_color_suffix} 但 ${Red_font_prefix}未启动${Font_color_suffix}"
 	fi
 else
-	if [[ -e "${file}/status-client.py" ]]; then
+	if [[ -e "${file}/client-psutil.py" ]]; then
 		check_pid_client
 		if [[ ! -z "${PID}" ]]; then
 			echo -e " 当前状态: 客户端 ${Green_font_prefix}已安装${Font_color_suffix} 并 ${Green_font_prefix}已启动${Font_color_suffix}"
