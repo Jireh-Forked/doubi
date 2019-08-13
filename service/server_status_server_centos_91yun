@@ -1,23 +1,23 @@
 #!/bin/bash
 # chkconfig: 2345 90 10
-# description: ServerStatus-Server
+# description: ServerStatus-91yun-Server
 
 ### BEGIN INIT INFO
-# Provides:          ServerStatus-Server
+# Provides:          ServerStatus-91yun-Server
 # Required-Start:    $network $syslog
 # Required-Stop:     $network
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Server status monitoring
-# Description:       Start or stop the ServerStatus Server server
+# Description:       Start or stop the ServerStatus-91yun Server server
 ### END INIT INFO
 
-NAME="ServerStatus Server"
+NAME="ServerStatus-91yun Server"
 NAME_BIN="sergate"
-SERVER_BIN="/usr/local/ServerStatus/server"
-WEB_BIN="/usr/local/ServerStatus/web"
-CONF="/usr/local/ServerStatus/server/config.json"
-CONF1="/usr/local/ServerStatus/server/config.conf"
+SERVER_BIN="/usr/local/ServerStatus-91yun/server"
+WEB_BIN="/usr/local/ServerStatus-91yun/web"
+CONF="/usr/local/ServerStatus-91yun/server/config.json"
+CONF1="/usr/local/ServerStatus-91yun/server/config.conf"
 Info_font_prefix="\033[32m" && Error_font_prefix="\033[31m" && Info_background_prefix="\033[42;37m" && Error_background_prefix="\033[41;37m" && Font_suffix="\033[0m"
 RETVAL=0
 
